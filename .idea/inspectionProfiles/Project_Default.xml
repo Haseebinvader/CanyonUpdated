@@ -1,0 +1,17 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="PLRA.leave_setup.models.employee_basic_information" />
+          <option value="PLRA.leave_setup.models.employee_master_data" />
+          <option value="PLRA.leave_setup.models.HR_Setup" />
+          <option value="PLRA.leave_setup.models.HR_Setups" />
+          <option value="PLRA.leave_setup.models.LeaveDependency.objects" />
+          <option value="PLRA.transfer_setup.models.employee_basic_information" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

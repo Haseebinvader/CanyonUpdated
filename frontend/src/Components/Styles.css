@@ -1,0 +1,421 @@
+.searchInput {
+
+    width: 300px;
+
+    border-radius: 4px;
+
+    height: 32px;
+
+    padding: 10px;
+
+    background-color: #c4c4c4;
+
+}
+
+ 
+
+.footerMenu {
+
+    width: 200px;
+
+    margin-top: 20px;
+
+    margin-left: 100px;
+
+}
+
+ 
+
+.footerContact {
+
+    width: 300px;
+
+    margin-top: 20px;
+
+    margin-left: 180px;
+
+}
+
+ 
+
+.footerContact li {
+
+    list-style: none;
+
+    margin: 10px 0;
+
+}
+
+ 
+
+.footerContact li a {
+
+    color: white;
+
+}
+
+ 
+
+.footerMenu li {
+
+    list-style: none;
+
+    margin: 10px 0;
+
+}
+
+ 
+
+.footerMenu li a {
+
+    color: white;
+
+}
+
+ 
+
+.sidebarSearchInput {
+
+    width: 100%;
+
+    border-radius: 4px;
+
+    height: 32px;
+
+    padding: 10px;
+
+    background-color: #c4c4c4;
+
+    margin-top: 10px;
+
+}
+
+ 
+
+.sideBarMenuData {
+
+    width: 100%;
+
+    padding: 4px;
+
+    margin-top: -10px;
+
+    background-color: #efefef;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+}
+
+ 
+
+.borderInput {
+
+    border: 1px solid #858585;
+
+    padding: 5px;
+
+    border-radius: 4px;
+
+    font-size: 11px;
+
+    width: 100%;
+
+}
+
+ 
+
+.custom-table {
+
+    max-width: 80vw;
+
+    border-collapse: collapse;
+
+}
+
+ 
+
+.custom-table thead {
+
+    background-color: #182e49;
+
+    color: #fff;
+
+}
+
+ 
+
+.custom-table th,
+
+.custom-table td {
+
+    text-align: left;
+
+    border-left: 1px solid #f1f1f1;
+
+    border-right: 1px solid #f1f1f1;
+
+    font-size: 11px;
+
+    padding: 8px 2px;
+
+    text-align: center;
+
+    position: relative;
+
+}
+
+ 
+
+.custom-table th {
+
+    padding: 15px 0;
+
+}
+
+ 
+
+.horizontal-row td {
+
+    border: none;
+
+    padding: 0;
+
+    border-top: 1px solid #ddd;
+
+}
+
+ 
+
+.tableOuterStyle {
+
+    margin-left: -20px;
+
+    height: 80vh;
+
+}
+
+ 
+
+.icon {
+
+    font-size: 14px;
+
+    margin-left: 5px;
+
+    cursor: pointer;
+
+    color: #fff;
+
+    position: absolute;
+
+    bottom: 0;
+
+    right: 0;
+
+}
+
+ 
+
+.dropdown {
+
+    position: absolute;
+
+    bottom: -56px;
+
+    right: 0;
+
+    background-color: #fff;
+
+    z-index: 1;
+
+    border-radius: 4px;
+
+    box-shadow: 0 0 8px 1px #728eaf;
+
+    width: 120px;
+
+    height: 53px;
+
+}
+
+ 
+
+.dropdown p {
+
+    padding: 3px 0;
+
+    color: #000;
+
+    cursor: pointer;
+
+}
+
+ 
+
+.dropdown p:nth-child(1) {
+
+    margin-top: 4px;
+
+}
+
+ 
+
+.dropdown p:hover {
+
+    padding: 3px 0;
+
+    color: #000;
+
+    cursor: pointer;
+
+    background-color: #ededed;
+
+}
+
+.request_input{
+    border-radius: 8px;
+    padding: 10px;
+    margin-left: 10px;
+    width: 100%;
+}
+.input_box{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+.input_box label{
+    display: inline-block;
+    width: 150px;
+}
+.paginationBtn {
+    border-radius: 6px;
+    border: 1px solid gray;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+}
+
+
+
+
+
+ 
+
+.paginationBtn:hover {
+    cursor: pointer;
+    background-color: #F4976C;
+}
+
+ 
+
+.gray-row {
+
+    background-color: #E5E5E5;
+
+}
+
+ 
+
+.gray-row:hover {
+
+    background-color: rgb(241, 241, 241);
+
+}
+
+ 
+
+.O-qnty {
+
+    background-color: #92d050;
+
+}
+
+ 
+
+.qnty-col {
+
+    background-color: #E5E5E5;
+
+}
+
+ 
+
+.QuantityInput {
+
+    padding: 10px;
+
+    border-radius: 4px;
+
+    height: 40px;
+
+    width: 120px;
+
+    font-weight: 600;
+
+    font-size: 16px;
+
+    border: 1px solid black;
+
+}
+
+ 
+
+.section {
+
+    width: 70px;
+
+    height: 30px;
+
+    border: 1px solid rgb(126, 126, 126);
+
+    border-radius: 6px;
+
+    margin-right: 20px;
+
+}
+ 
+
+.custom_header {
+
+    position: sticky;
+
+    top: 0;
+
+}
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+@media (max-width: 900px) {
+
+    .custom-table {
+
+        max-width: 100%;
+
+        border-collapse: collapse;
+
+    }
+
+ 
+
+    .tableOuterStyle {
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+    }
+
+}

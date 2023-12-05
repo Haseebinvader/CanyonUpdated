@@ -1,0 +1,123 @@
+.container{
+    margin: 50px auto;
+    width: 80%;
+    background-color: #EDEDED;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 20px;
+    
+}
+.input_box{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.input_box label{
+    display: inline-block;
+    width: 120px;
+}
+.request_input{
+    border-radius: 8px;
+    padding: 10px;
+    margin-left: 10px;
+    width: 100%;
+}
+.head{
+    color: #cc7953;
+    margin-left: 5vw;
+}
+.para{
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+.icon{
+    margin-left: auto;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+.space-betw{
+    display: flex;
+    flex-direction: column;
+   
+   
+}
+.flex1{
+    display: flex;
+   
+}
+.subbtn{
+    border: 1px solid #F4976B;
+    border-radius: 3px;
+    width: 10rem;
+    height: 2.5rem;
+    display: block;
+    color: #fff;
+    background: linear-gradient(to right, #1565C0 50%, #F4976B 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    transition: all .5s ease-out;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    cursor: pointer;
+
+}
+
+.canbtn {
+    /* background-color: #eb6526;
+    border-radius: 6px;
+    height: 6vh;
+    color: white;
+    border-color: #fff;
+    width: 100px; */
+    border: 1px solid #F4976B;
+    border-radius: 3px;
+    width: 10rem;
+    height: 6vh;
+    display: block;
+    color: #fff;
+    background: linear-gradient(to right, #1565C0 50%, #F4976B 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    transition: all .5s ease-out;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+.subbtn:hover{
+    background-position: left bottom;
+    color: #fff;
+    border: 1px solid #1565C0;
+}
+
+.canbtn:hover {
+    background-position: left bottom;
+    color: #fff;
+    border: 1px solid #1565C0;
+}
+#Name{
+    margin-top: 15px;
+    width: 24vw;
+    height: 5vh; 
+    border-color:#fff ;
+    border-radius :2px ;
+    
+
+}
+#Lname{
+    margin-top: 15px;
+    margin-left: 5px;
+    width: 24vw;
+    height: 5vh; 
+    border-color:#fff ;
+    border-radius :2px ;
+}
+#item, #Email,#Phone,#Quantity,#tprice,#comments{
+    border-color: #fff;
+    height: 5vh; 
+    margin-top: 15px;
+}
