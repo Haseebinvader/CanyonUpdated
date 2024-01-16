@@ -1,143 +1,216 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Grid, Box, Typography, Divider, Button, Container } from '@mui/material'
-import { UserContext } from '../../UserContext/UserContext';
-import { Link } from 'react-router-dom'
-import '../Styles.css'
+import * as React from "react";
+import CssBaseline from "@mui/material/CssBaseline";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Address from "./Address";
+import Payment from "./Payment";
+import Review from "./Review";
+import { useContext } from "react";
+
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { UserContext } from "../../UserContext/UserContext";
 
 
-const localStorageItemCart = JSON.parse(localStorage.getItem('itemCart')) || [];
+const steps = ["Shipping address", "Payment details", "Review your order"];
 
-const CheckOutPage = () => {
-  const [total, setTotal] = React.useState(0);
-  const [quantity, setQuantity] = React.useState(0)
-  const { row } = useContext(UserContext)
-  return (
-    <Box sx={{ py: 4 }}>
-      <Container>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={8.3} sx={{ backgroundColor: "#F1F1F1", mt: 4, borderRadius: '10px', px: 2 }}>
-            <Typography variant='h6' fontWeight={600} sx={{ textAlign: 'center' }}>Enter New Shipping Address</Typography>
-            <form action="">
-              <Grid container spacing={2} mt={2}>
-                <Grid item xs={12} md={6}>
-                  <div className="input_box" >
-                    <label htmlFor="item">First Name</label>
-                    <input className="request_input" />
-                  </div>
-                  <div className="input_box">
-                    <label htmlFor="item">Phone</label>
-                    <input className="request_input" type="number" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <div className="input_box">
-                    <label htmlFor="item">Last Name</label>
-                    <input className="request_input" />
-                  </div>
-                  <div className="input_box">
-                    <label htmlFor="item">Company</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} sx={{ mt: -4 }}>
-                  <div className="input_box">
-                    <label htmlFor="item">Address 1</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} sx={{ mt: -4 }}>
-                  <div className="input_box">
-                    <label htmlFor="item">Address 2</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} md={4} sx={{ mt: -4 }}>
-                  <div className="input_box">
-                    <label htmlFor="item">City</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} md={4} sx={{ mt: -4 }}>
-                  <div className="input_box">
-                    <label htmlFor="item">State</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} md={4} sx={{ mt: -4 }}>
-                  <div className="input_box">
-                    <label htmlFor="item">Zip</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <Grid item xs={12} sx={{ mt: -4 }}>
-                  <div className="input_box">
-                    <label htmlFor="item">Contry</label>
-                    <input className="request_input" />
-                  </div>
-                </Grid>
-                <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'end', gap: 8 }}  >
-                  <Button sx={{ color: '#fff', backgroundColor: "#F4976C", width: '140px', "&:hover": { backgroundColor: "#F4976C" } }} >Cancel</Button>
-                  <Button sx={{ color: '#fff', backgroundColor: "#F4976C", width: '140px', "&:hover": { backgroundColor: "#F4976C" } }}>Save Address</Button>
-                </div>
-              </Grid>
-            </form>
-          </Grid>
-          <Grid item xs={12} md={3.5} sx={{ backgroundColor: '#F1F1F1', borderRadius: "12px", mt: 4, ml: 2 }}>
-            <Typography variant="body1" color="initial" sx={{ textAlign: 'center', fontSize: '18px', fontWeight: 600, mt: "-18px" }}>
-              Order Summary
-            </Typography>
-            <Box sx={{ width: '100%', borderRadius: '10px', p: 4, backgroundColor: '#fff', ml: "-16px", mb: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body1" color="initial">
-                  Sub Total (1-Item)
-                </Typography>
-                <Typography variant="body1" color="initial">
-                  ${total}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
-                <Typography variant="body1" color="initial" >Shipping</Typography>
-                <Typography variant="body1" color="initial" >TBD</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
-                <Typography variant="body1" color="initial" >Tax</Typography>
-                <Typography variant="body1" color="initial" >TBD</Typography>
-              </Box>
-              <Divider variant="fullWidth" orientation="horizontal" sx={{ mt: 2 }} />
-              <Box sx={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
-                <Typography variant="body1" color="initial" >Total</Typography>
-                <Typography variant="body1" color="initial" sx={{ fontWeight: 900 }}>${total}</Typography>
-              </Box>
-              <Button variant='contained' sx={{
-                width: "100%", fontSize: "12px", height: '32px', backgroundColor: '#F4976C', mt: 2,
-                '&:hover': { backgroundColor: '#F4976C', },
-              }}> Proceed to checkout</Button>
-              <Box sx={{ backgroundColor: '#ffeeba', my: 2, borderRadius: '10px', p: 1 }}>
-                <Typography variant="body2" color="initial">
-                  we currently only ship web orders to the United
-                  States.please submit RFQ if you need international
-                  shipping
-                </Typography>
-              </Box>
-              <Button variant='contained' sx={{
-                width: "100%", fontSize: "12px", height: '32px', backgroundColor: '#F4976C', mt: 2,
-                '&:hover': { backgroundColor: '#F4976C', },
-              }}> Back to Ship</Button>
-
-              <Link to="/addtocart">
-                <Button variant='contained' sx={{
-                  width: "100%", fontSize: "12px", height: '32px', backgroundColor: '#F4976C', mt: 2,
-                  '&:hover': { backgroundColor: '#F4976C', },
-                }}> Return To Cart</Button>
-              </Link>
-            </Box>
-
-          </Grid>
-        </Grid>
-      </Container>
-
-    </Box >
-  )
+function getStepContent(step) {
+  switch (step) {
+    case 0:
+      return <Address />;
+    case 1:
+      return <Payment />;
+    case 2:
+      return <Review />;
+    default:
+      throw new Error("Unknown step");
+  }
 }
 
-export default CheckOutPage
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
+
+export default function CheckOutPage() {
+  const { accessToken, setorderno, orderno, cardDetails, setCardDetails } = useContext(UserContext);
+  const [custInternalID, setCustInternalID] = React.useState('')
+  React.useEffect(() => {
+    axios
+      .post(
+        "https://ebiz-api1.ebizcharge.net/v1/GetCustomer",
+        {
+          "getCustomer": {
+            "securityToken": {
+              "securityId": "919fc55e-940a-44d5-8770-f3faa8f982b9",
+              "userId": "aS60T3",
+              "password": "3Cn166A"
+            },
+            "customerId": "AZZ32"
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "EBizSubscription-Key": '5cdcf15d32a84acfac7d76ed5bdcab49'
+          },
+        }
+      )
+      .then((res) => {
+        setCustInternalID(res.data.getCustomerResponse.getCustomerResult.customerInternalId
+        );
+      });
+  }, [custInternalID])
+  const postCardDetails = () => {
+    axios
+      .post(
+        "https://ebiz-api1.ebizcharge.net/v1/AddCustomerPaymentMethodProfile",
+        {
+          "addCustomerPaymentMethodProfile": {
+            "securityToken": {
+              "securityId": "919fc55e-940a-44d5-8770-f3faa8f982b9",
+              "userId": "aS60T3",
+              "password": "3Cn166A"
+            },
+            "customerInternalId": custInternalID,
+            "paymentMethodProfile": {
+              "methodType": cardDetails?.methodType,
+              "methodName": cardDetails?.methodName,
+              "accountHolderName": cardDetails?.accountHolderName,
+              "avsStreet": cardDetails?.avsStreet,
+              "avsZip": cardDetails?.avsZip,
+              "cardCode": cardDetails?.cardCode,
+              "cardExpiration": cardDetails?.cardExpiration,
+              "cardNumber": cardDetails?.cardNumber
+            }
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "EBizSubscription-Key": '5cdcf15d32a84acfac7d76ed5bdcab49'
+          },
+        }
+      )
+      .then((res) => {
+        setCustInternalID(res.data.getCustomerResponse.getCustomerResult.customerInternalId
+        );
+      });
+  };
+  const postSalesOrder = () => {
+    const user = sessionStorage.getItem("user");
+    const itemsInCartArray = JSON.parse(localStorage.getItem("itemCart"));
+    const newSalesLines = itemsInCartArray.map((i) => ({
+      lineType: "Item",
+      lineObjectNumber: i.ItemNo,
+      quantity: i.qnty,
+      unitPrice: i.unitCost[0],
+    }));
+    console.log(newSalesLines);
+    axios
+      .post(
+        "https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/api/v2.0/companies(2bd1cda4-091c-ec11-bb76-000d3a22055d)/salesOrders?$expand=salesOrderLines",
+        {
+          customerNumber: user,
+          salesOrderLines: newSalesLines,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast.success("order posted successfully")
+        setorderno(res.data.number)
+      });
+  };
+
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
+
+  return (
+    <>
+      <ThemeProvider theme={defaultTheme}>
+        <CssBaseline />
+        <AppBar
+          position="absolute"
+          color="default"
+          elevation={0}
+          sx={{
+            position: "relative",
+            borderBottom: (t) => `1px solid ${t.palette.divider}`,
+          }}
+        ></AppBar>
+        <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+          <Paper
+            variant="outlined"
+            sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+          >
+            <Typography component="h1" variant="h4" align="center">
+              Checkout
+            </Typography>
+            <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography variant="h5" gutterBottom>
+                  Thank you for your order.
+                </Typography>
+                <Typography variant="subtitle1">
+                  ` Your order number is ${orderno}. We have emailed your order
+                  confirmation, and will send you an update when your order
+                  has shipped .`
+                </Typography>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {getStepContent(activeStep)}
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                      Back
+                    </Button>
+                  )}
+
+                  <Button
+                    onClick={() => {
+                      if (activeStep === 2) {
+                        postSalesOrder();
+                        postCardDetails();
+                      }
+
+                      handleNext();
+                    }}
+                    variant="contained"
+                    sx={{ mt: 3, ml: 1 }}
+                  >
+                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                  </Button>
+                </Box>
+              </React.Fragment>
+            )}
+          </Paper>
+        </Container>
+      </ThemeProvider>
+    </>
+  );
+}

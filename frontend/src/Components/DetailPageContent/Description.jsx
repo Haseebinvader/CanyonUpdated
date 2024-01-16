@@ -53,6 +53,7 @@ const Description = () => {
                 ${row.InternallyLubricated ? row.InternallyLubricated + ',' : ''}
                 ${row.ExternallyLubricated ? row.ExternallyLubricated + ',' : ''}
                 ${row.ConductiveFiller ? row.ConductiveFiller + ',' : ''}
+                ${row.USPClassVI ? row.USPClassVI + ',' : ''}
                 `} />
             </Box>
         </section>

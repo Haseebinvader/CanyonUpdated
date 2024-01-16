@@ -18,7 +18,7 @@ def get_access_token():
 
         'client_id': '68147cfe-d472-4788-a9ac-7aa804249a96',
 
-        'client_secret': 'KZ28Q~a..oYpL0zdOuqaK-OgFyqsYj6Xuxg05cfa',
+        'client_secret': '9jF8Q~jTUMdP6CtxNwP6zis7nS1x_acCXdJf-bW4',
 
         'scope': 'https://api.businesscentral.dynamics.com/.default'
 
@@ -67,7 +67,7 @@ def sehedule_api(url=None):
 
         submaterial_list = []
         if not url:
-         url = "https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/ODataV4/Company(%27My%20Company%27)/itemapi"
+            url = "https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/ODataV4/Company(%27My%20Company%27)/itemapi"
 
         while url:
 
@@ -104,7 +104,7 @@ def sehedule_api(url=None):
                     if not is_same_product:
 
                         if current_product and current_product['Blocked'] == 'false' and current_product[
-                            'Online'] == 'Online':
+                                'Online'] == 'Online':
                             product_list.append(current_product)
 
                         current_product = {
@@ -371,7 +371,8 @@ def sehedule_api(url=None):
 
                             Description2=product_data.get('Description2'),
 
-                            SearchDescription=product_data.get('SearchDescription'),
+                            SearchDescription=product_data.get(
+                                'SearchDescription'),
 
                             LotSize=product_data.get('LotSize'),
 
@@ -389,13 +390,16 @@ def sehedule_api(url=None):
 
                             Color=product_data.get('Color'),
 
-                            LowTemperature=product_data.get('LowTemperature(°C)'),
+                            LowTemperature=product_data.get(
+                                'LowTemperature(°C)'),
 
-                            HighTemperature=product_data.get('HighTemperature(°C)'),
+                            HighTemperature=product_data.get(
+                                'HighTemperature(°C)'),
 
                             FDACompliant=product_data.get('FDACompliant'),
 
-                            MaterialSubtype=product_data.get('MaterialSubtype'),
+                            MaterialSubtype=product_data.get(
+                                'MaterialSubtype'),
 
                             CureType=product_data.get('CureType'),
 
@@ -407,7 +411,8 @@ def sehedule_api(url=None):
 
                             MaterialNotes=product_data.get('MaterialNotes'),
 
-                            CleanRoomManufactured=product_data.get('CleanRoomManufactured'),
+                            CleanRoomManufactured=product_data.get(
+                                'CleanRoomManufactured'),
 
                             FDAType=product_data.get('FDAType'),
 
@@ -427,39 +432,51 @@ def sehedule_api(url=None):
 
                             ULRating=product_data.get('ULRating'),
 
-                            MetalDetectable=product_data.get('MetalDetectable'),
+                            MetalDetectable=product_data.get(
+                                'MetalDetectable'),
 
                             NSF61=product_data.get('NSF61'),
 
                             NSF51=product_data.get('NSF51'),
 
-                            AntiExplosiveDecompression=product_data.get('AntiExplosiveDecompressionAED'),
+                            AntiExplosiveDecompression=product_data.get(
+                                'AntiExplosiveDecompressionAED'),
 
                             NACETM0297=product_data.get('NACETM0297'),
 
                             NORSOKM710=product_data.get('NORSOKM710'),
 
-                            UltraLowTemperature=product_data.get('UltraLowTemperature'),
+                            UltraLowTemperature=product_data.get(
+                                'UltraLowTemperature'),
 
-                            UltraHighTemperature=product_data.get('UltraHighTemperature'),
+                            UltraHighTemperature=product_data.get(
+                                'UltraHighTemperature'),
 
                             SteamResistant=product_data.get('SteamResistant'),
 
-                            UltraSteamResistant=product_data.get('UltraSteamResistant'),
+                            UltraSteamResistant=product_data.get(
+                                'UltraSteamResistant'),
 
-                            InternallyLubricated=product_data.get('InternallyLubricated'),
+                            InternallyLubricated=product_data.get(
+                                'InternallyLubricated'),
 
-                            ExternallyLubricated=product_data.get('ExternallyLubricated'),
+                            ExternallyLubricated=product_data.get(
+                                'ExternallyLubricated'),
 
-                            ConductiveFiller=product_data.get('ConductiveFiller'),
+                            ConductiveFiller=product_data.get(
+                                'ConductiveFiller'),
 
-                            LowCompressionSet=product_data.get('LowCompressionSet'),
+                            LowCompressionSet=product_data.get(
+                                'LowCompressionSet'),
 
-                            CrossSectionalGeometry=product_data.get('CrossSectionalGeometry'),
+                            CrossSectionalGeometry=product_data.get(
+                                'CrossSectionalGeometry'),
 
-                            CrossSectionalDiameter=product_data.get('CrossSectionalDiameter(CS)'),
+                            CrossSectionalDiameter=product_data.get(
+                                'CrossSectionalDiameter(CS)'),
 
-                            InsideDiameter=product_data.get('InsideDiameter(ID)'),
+                            InsideDiameter=product_data.get(
+                                'InsideDiameter(ID)'),
 
                             SizeAS568=product_data.get('Size(AS568)'),
 
@@ -484,7 +501,7 @@ def sehedule_api(url=None):
                     url = data["@odata.nextLink"]
 
                 else:
-                    
+
                     sehedule_api(url)
 
 

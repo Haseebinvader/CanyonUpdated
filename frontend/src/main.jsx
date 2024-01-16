@@ -21,11 +21,11 @@ import theme from "./Theme/theme.js";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline>
-          <App />
-      </CssBaseline>
-    </ThemeProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <CssBaseline>
+      <App />
+    </CssBaseline>
+  </ThemeProvider>
+  // </React.StrictMode>
 );

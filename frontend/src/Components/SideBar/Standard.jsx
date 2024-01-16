@@ -8,7 +8,7 @@ import { UserContext } from "../../UserContext/UserContext";
 const Standard = () => {
 
   const { setData, setUrl, pageSize, url, selectedCountry, setSelectedCountry,
-    selectedSize, setSelectedSize,selectedCS, setSelectedCS,selectedID, setSelectedID,
+    selectedSize, setSelectedSize, selectedCS, setSelectedCS, selectedID, setSelectedID,
     selectedUSASize,
     selectedJSSize,
     selectedUSACS,
@@ -29,7 +29,7 @@ const Standard = () => {
   const [cs, setCs] = useState(0);
   const [id, setid] = useState(0);
   const [sizeBool, setSizeBool] = useState(true)
-  const [filterData, setFilterData] = useState(true)
+  const [filterData, setFilterData] = useState([])
 
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);
@@ -143,7 +143,7 @@ const Standard = () => {
   }
   const handleCheckboxChange = (e, size, cs, id) => {
     const isChecked = e.target.checked;
-  
+
     if (isChecked) {
       setSelectedSize((prevSelectedSize) => [...prevSelectedSize, size]);
       setSelectedCS((prevSelectedCS) => [...prevSelectedCS, cs]);
@@ -160,7 +160,7 @@ const Standard = () => {
           return true;
         });
       });
-      
+
       setSelectedID((prevSelectedID) => {
         let removed = false;
         return prevSelectedID.filter((item) => {
@@ -173,57 +173,57 @@ const Standard = () => {
       });
     }
   };
-  
+
   useEffect(() => {
     if (selectedCountry === "USA") {
 
       const selectedSizeString = selectedSize.join('$');
       const selectedCSString = selectedCS.join('$');
       const selectedIDString = selectedID.join('$');
-  
+
       // Build the URL with selected values
       const apiUrl = `&SizeAS568=${selectedSizeString}&CrossSectionalDiameter=${selectedCSString}&InsideDiameter=${selectedIDString}`;
-    if(selectedSize.length === 0 && selectedCS.length === 0 && selectedID.length === 0){
-      let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
-      setUrl(newUrl)
+      if (selectedSize.length === 0 && selectedCS.length === 0 && selectedID.length === 0) {
+        let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
+        setUrl(newUrl)
+      }
+      else {
+        let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
+        setUrl(newUrl + apiUrl)
+      }
     }
-    else{
-      let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
-      setUrl(newUrl+apiUrl)
-    }
-    }
-    else  if (selectedCountry === "Japan") {
+    else if (selectedCountry === "Japan") {
 
       const selectedSizeString = selectedSize.join('$');
       const selectedCSString = selectedCS.join('$');
       const selectedIDString = selectedID.join('$');
-  
+
       // Build the URL with selected values
       const apiUrl = `&SizeJIS=${selectedSizeString}&CrossSectionalDiameter=${selectedCSString}&InsideDiameter=${selectedIDString}`;
-    if(selectedSize.length === 0 && selectedCS.length === 0 && selectedID.length === 0){
-      let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
-      setUrl(newUrl)
-    }
-    else{
-      let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
-      newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
-      setUrl(newUrl+apiUrl)
-    }
+      if (selectedSize.length === 0 && selectedCS.length === 0 && selectedID.length === 0) {
+        let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
+        setUrl(newUrl)
+      }
+      else {
+        let newUrl = url.replace(/(\?|&)SizeAS568=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)SizeJIS=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)CrossSectionalDiameter=[^&]*/g, "");
+        newUrl = newUrl.replace(/(\?|&)InsideDiameter=[^&]*/g, "");
+        setUrl(newUrl + apiUrl)
+      }
     }
     // Similar logic for "Japan" country...
   }, [selectedCountry, selectedSize, selectedCS, selectedID]);
-  
+
 
   return (
     <section className="sideBarMenuData">
@@ -239,8 +239,8 @@ const Standard = () => {
           {showTable && !selectedCountry ? <AiFillCaretDown onClick={showTableHandler} /> : <AiFillCaretUp onClick={showTableHandler} />}
         </Grid>
         <Grid item xs={3}><input type="text" placeholder="Size" className="borderInput" onChange={handlesizechange} /></Grid>
-        <Grid item xs={3}><input type="number" placeholder="CS" className="borderInput" onChange={handlecschange} /></Grid>
-        <Grid item xs={3}><input type="number" placeholder="ID" className="borderInput" onChange={handleidchange} /></Grid>
+        <Grid item xs={3}><input type="number" placeholder="CS(mm)" className="borderInput" onChange={handlecschange} /></Grid>
+        <Grid item xs={3}><input type="number" placeholder="ID(mm)" className="borderInput" onChange={handleidchange} /></Grid>
       </Grid>
       <div style={{ maxHeight: "150px", overflowY: 'scroll', }}>
         {
@@ -258,7 +258,7 @@ const Standard = () => {
                             <td>
                               <input
                                 type="checkbox"
-                                checked={selectedSize.includes(i[0])} 
+                                checked={selectedSize.includes(i[0])}
                                 style={{ width: '100%', transform: 'scale(1.3)', cursor: 'pointer' }}
                                 onChange={(e) => {
                                   handleCheckboxChange(e, i[0], i[1], i[2]);
@@ -267,7 +267,7 @@ const Standard = () => {
 
                             </td>
 
-                            <td style={{ fontSize: "11px" }}>{selectedCountry === "USA" ? i[0].replace('-', '') : i[0]}</td>
+                            <td style={{ fontSize: "11px" }}>{selectedCountry === "USA" ? i[0] : i[0]}</td>
                             <td style={{ fontSize: "11px" }}>{i[1]}</td>
                             <td style={{ fontSize: "11px" }}>{i[2]}</td>
                           </tr> : <></>
@@ -286,12 +286,12 @@ const Standard = () => {
                             <td>
                               <input
                                 type="checkbox"
-                                checked={selectedSize.includes(i[0])} 
+                                checked={selectedSize.includes(i[0])}
                                 style={{ width: '100%', transform: 'scale(1.3)', cursor: 'pointer' }}
                                 onChange={(e) => {
                                   handleCheckboxChange(e, i[0], i[1], i[2]);
                                 }
-                                
+
                                 }
                               />
                             </td>

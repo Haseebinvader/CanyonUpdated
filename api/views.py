@@ -15,6 +15,8 @@ from django.db.models import FloatField
 from django.db.models.functions import Cast
 from rest_framework import filters
 from django.core import serializers
+from datetime import datetime, timezone
+from authentication.token import getAccessToken
 
 
 class GetAccessTokenView(View):
@@ -27,7 +29,7 @@ class GetAccessTokenView(View):
 
             'client_id': '68147cfe-d472-4788-a9ac-7aa804249a96',
 
-            'client_secret': 'KZ28Q~a..oYpL0zdOuqaK-OgFyqsYj6Xuxg05cfa',
+            'client_secret': '9jF8Q~jTUMdP6CtxNwP6zis7nS1x_acCXdJf-bW4',
 
             'scope': 'https://api.businesscentral.dynamics.com/.default'
 
@@ -58,7 +60,7 @@ class GetAccessTokenView(View):
             return JsonResponse({'access_token': access_token}, status=200)
 
         else:
-
+            print(response)
             return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
@@ -285,7 +287,7 @@ class DataFetchView(View):
                             NSF51=product_data.get('NSF51'),
 
                             AntiExplosiveDecompression=product_data.get(
-                                'AntiExplosiveDecompressionAED'),
+                                'Anti-Explosive Decompression (AED)'),
 
                             NACETM0297=product_data.get('NACETM0297'),
 
@@ -380,7 +382,7 @@ class DataFetchView(View):
 
             'client_id': '68147cfe-d472-4788-a9ac-7aa804249a96',
 
-            'client_secret': 'KZ28Q~a..oYpL0zdOuqaK-OgFyqsYj6Xuxg05cfa',
+            'client_secret': '9jF8Q~jTUMdP6CtxNwP6zis7nS1x_acCXdJf-bW4',
 
             'scope': 'https://api.businesscentral.dynamics.com/.default'
 
@@ -424,7 +426,7 @@ class DataFetchView(View):
 
         }
 
-    
+
 class CustomFilterBackend(DjangoFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
@@ -435,12 +437,13 @@ class CustomFilterBackend(DjangoFilterBackend):
         query = Q()
         key_query = Q()
         for field_name, values in request.query_params.items():
-            if field_name=='search' :
-                    search_query = request.GET.get('search', '')
-                    if search_query:
-                        for field_name in view.ordering_fields:
-                            query |= Q(**{f"{field_name}__icontains": search_query})
-            elif field_name == 'HighTemperature' or field_name == 'LowTemperature':
+            # if field_name == 'search':
+            #     search_query = request.GET.get('search', '')
+            #     if search_query:
+            #         for field_name in view.ordering_fields:
+            #             query |= Q(
+            #                 **{f"{field_name}__icontains": search_query})
+            if field_name == 'HighTemperature' or field_name == 'LowTemperature':
 
                 low_temp = request.query_params.get('LowTemperature', None)
 
@@ -448,7 +451,7 @@ class CustomFilterBackend(DjangoFilterBackend):
 
                 query = query & (Q(LowTemperature__lte=low_temp) &
                                  Q(HighTemperature__gte=high_temp))
-            elif field_name in ['Color', 'USPClassVI', 'NSF61', 'Material', 'MaterialSubtype', 'FDACompliant', 'DurometerRange', 'Brand', 'CrossSectionalDiameter', 'InsideDiameter',"FDAType", "USPClassVI87", "USPClassVI88", "ULListed", "ULRating", "AntiExplosiveDecompression", "NACETM0297", "NORSOKM710", "SteamResistant", "UltraSteamResistant", "LowCompressionSet", "KTW", "WRAS", "A3Sanitary", "MetalDetectable", "CleanRoomManufactured", "NSF51", "InternallyLubricated", "ExternallyLubricated", "ConductiveFiller", "LowCompressionSet"]:
+            if field_name in ['Online', 'Color', 'USPClassVI', 'NSF61', 'Material', 'MaterialSubtype', 'FDACompliant', 'DurometerRange', 'Brand', 'CrossSectionalDiameter', 'InsideDiameter', "FDAType", "USPClassVI87", "USPClassVI88", "ULListed", "ULRating", "AntiExplosiveDecompression", "NACETM0297", "NORSOKM710", "SteamResistant", "UltraSteamResistant", "LowCompressionSet", "KTW", "WRAS", "A3Sanitary", "MetalDetectable", "CleanRoomManufactured", "NSF51", "InternallyLubricated", "ExternallyLubricated", "ConductiveFiller", "LowCompressionSet"]:
                 arr = values.split("$")
                 if field_name == 'Color':
                     key_query = Q(Color__in=arr)
@@ -512,16 +515,17 @@ class CustomFilterBackend(DjangoFilterBackend):
                     key_query = Q(ConductiveFiller__in=arr)
                 elif field_name == 'LowCompressionSet':
                     key_query = Q(LowCompressionSet__in=arr)
+                elif field_name == 'Online':
+                    key_query = Q(Online__in=arr)
 
             elif field_name == 'ItemNo':
                 key_query = Q(ItemNo=values)
 
-
             query = query & key_query
-
 
         queryset = Product.objects.filter(query)
         return queryset
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -530,29 +534,37 @@ class ProductViewSet(viewsets.ModelViewSet):
     default_limit = 10
     max_limit = 100
     # Use the custom filtering backend
-    filter_backends = [CustomFilterBackend, filters.OrderingFilter]
+    filter_backends = [CustomFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = [
         'id', 'ItemNo', 'qnty', 'price', 'Description', 'Description2', 'SearchDescription', 'Blocked',
-        'CompoundNumber', 'Material', 'Durometer', 'DurometerScale', 'DurometerRange', 'Color','HighTemperature',
+        'CompoundNumber', 'Material', 'Durometer', 'DurometerScale', 'DurometerRange', 'Color', 'HighTemperature',
         'LowTemperature', 'FDACompliant', 'MaterialSubtype', 'Brand', 'MaterialNotes',
         'CrossSectionalGeometry', 'CrossSectionalDiameter', 'InsideDiameter', 'SizeAS568', 'SizeMetric',
         'SizeJIS', 'SizeStandard', 'Online'
     ]
+    search_fields = ['$qnty', '$price', '$Description', '$Description2', '$SearchDescription',
+                     '$CompoundNumber', '$Material', '$Durometer', '$DurometerScale', '$DurometerRange', '$Color', '$HighTemperature',
+                     '$LowTemperature', '$FDACompliant', '$MaterialSubtype', '$Brand', '$MaterialNotes',
+                     '$CrossSectionalGeometry', '$CrossSectionalDiameter', '$InsideDiameter', '$SizeAS568', '$SizeMetric',
+                     '$SizeJIS', '$SizeStandard'
+                     ]
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)  # get the built-in response
         queryset = self.filter_queryset(self.get_queryset())
 
- 
-
         # get the distinct values
         distinct_colors = queryset.order_by().values_list('Color', flat=True).distinct()
-        distinct_Material = queryset.order_by().values_list('Material', flat=True).distinct()
-        distinct_MaterialSubtype = queryset.order_by().values_list('MaterialSubtype', flat=True).distinct()
-        distinct_DurometerRange = queryset.order_by().values_list('DurometerRange', flat=True).distinct()
+        distinct_Material = queryset.order_by().values_list(
+            'Material', flat=True).distinct()
+        distinct_MaterialSubtype = queryset.order_by().values_list(
+            'MaterialSubtype', flat=True).distinct()
+        distinct_DurometerRange = queryset.order_by().values_list(
+            'DurometerRange', flat=True).distinct()
         distinct_Brand = queryset.order_by().values_list('Brand', flat=True).distinct()
 
         print(distinct_colors)
- 
 
         # create a new dictionary for the response data
         data = {
@@ -567,16 +579,53 @@ class ProductViewSet(viewsets.ModelViewSet):
         # create a new Response object with the new data
         return Response(data)
 
+
 class GetUSASizeView(View):
-    filter_backends = [ filters.OrderingFilter]
-    ordering_fields ="__all__"
-    def get(self,request):
-      queryset=Product.objects.filter(Online='Online').order_by('SizeAS568').exclude(SizeAS568=None, CrossSectionalDiameter=None, InsideDiameter=None).values_list('SizeAS568', 'CrossSectionalDiameter','InsideDiameter').distinct()
-      serialized_data = list(queryset)
-      return JsonResponse({"data": serialized_data})
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = "__all__"
+
+    def get(self, request):
+        queryset = Product.objects.filter(Online='Online').order_by('SizeAS568').exclude(
+            SizeAS568=None, CrossSectionalDiameter=None, InsideDiameter=None).values_list('SizeAS568', 'CrossSectionalDiameter', 'InsideDiameter').distinct()
+        serialized_data = list(queryset)
+        return JsonResponse({"data": serialized_data})
+
 
 class GetJSSizeView(View):
-    def get(self,request):
-      queryset=Product.objects.order_by('SizeJIS').values_list('SizeJIS', 'CrossSectionalDiameter','InsideDiameter').exclude(SizeJIS=None, CrossSectionalDiameter=None, InsideDiameter=None).distinct()
-      serialized_data = list(queryset)
-      return JsonResponse({"data": serialized_data})
+    def get(self, request):
+        queryset = Product.objects.order_by('SizeJIS').values_list('SizeJIS', 'CrossSectionalDiameter', 'InsideDiameter').exclude(
+            SizeJIS=None, CrossSectionalDiameter=None, InsideDiameter=None).distinct()
+        serialized_data = list(queryset)
+        return JsonResponse({"data": serialized_data})
+
+
+def updateItems(self):
+    time = 0
+    current_datetime = datetime.now(timezone.utc)
+    formatted_datetime = current_datetime.strftime(
+        "%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+    try:
+        time = LastTimeUpdation.objects.latest('timeStamp').timeStamp
+    except:
+        pass
+    if time != 0:
+        lastUpdatedTime = time.strftime(
+            "%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    else:
+        lastUpdatedTime = formatted_datetime
+    url = f"https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/ODataV4/Company(%27My%20Company%27)/itemapi?$filter= LastDateTimeModified gt {lastUpdatedTime}"
+    while url:
+        response = requests.get(url, headers=getAccessToken())
+        LastTimeUpdation.objects.create(
+            timeStamp=formatted_datetime
+        )
+        if response.status_code == 200:
+            data = response.json()
+            for item in data['value']:
+                product = Product.objects.get(ItemNo=item['ItemNo'])
+                product.__dict__.update(item)
+                product.save()
+            return JsonResponse({'message': "Products Updated!"})
+
+    return JsonResponse({'message': "Products Updated!"})

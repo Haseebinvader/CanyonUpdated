@@ -93,12 +93,6 @@ const Compiance = () => {
         setUrl(newUrl);
       }
 
-      if (material === 'ULRating') {
-        let newUrl = url.replace(/(\?|&)ULRating=[^&]*/g, "");
-        newUrl = newUrl.replace(/(\?|&)offset=[^&]*/g, "");
-        setUrl(newUrl);
-      }
-
       if (material === 'AntiExplosiveDecompression') {
         let newUrl = url.replace(/(\?|&)AntiExplosiveDecompression=[^&]*/g, "");
         newUrl = newUrl.replace(/(\?|&)offset=[^&]*/g, "");

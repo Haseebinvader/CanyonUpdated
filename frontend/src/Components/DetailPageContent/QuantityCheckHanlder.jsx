@@ -10,23 +10,8 @@ import { UserContext } from '../../UserContext/UserContext';
 
 import axios from 'axios';
 
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
-
-
-
-
-const rowData = [
-
-  { quantity: 2, unitCost: "3 days", discount: "$15.00" },
-
-  { quantity: 3, unitCost: "1 day", discount: "$5.00" },
-
-  { quantity: 4, unitCost: "4 days", discount: "$20.00" },
-
-  { quantity: 5, unitCost: "2 days", discount: "$10.00" },
-
-];
 
 
 
@@ -46,48 +31,38 @@ const QuantityCheckHanlder = () => {
   const { id } = useParams()
 
   const [rowData, setRowData] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
+    axios.get(
+      `https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/ODataV4/Company('My%20Company')/itemsaleprice?$filter: ItemNo eq ${id}`,
+      {
+        headers: {
 
-    return () => {
+          Authorization: `Bearer ${accessToken}`,
 
+        },
 
+        params: {
 
-      axios.get(
+          $filter: `ItemNo eq '${id}'`,
 
-        `https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/ODataV4/Company('My%20Company')/itemsaleprice`,
+        },
 
-        {
+      }
 
-          headers: {
+    )
 
-            Authorization: `Bearer ${accessToken}`,
+      .then((response) => {
+        setRowData(response.data.value);
 
-          },
+      })
 
-          params: {
+      .catch((error) => {
 
-            $filter: `ItemNo eq '${id}'`,
+        console.error("Error:", error);
 
-          },
-
-        }
-
-      )
-
-        .then((response) => {
-
-          setRowData(response.data.value);
-
-        })
-
-        .catch((error) => {
-
-          console.error("Error:", error);
-
-        });
-
-    }
+      });
 
   }, [accessToken, rowData])
 
@@ -97,31 +72,28 @@ const QuantityCheckHanlder = () => {
 
       <Typography variant="body1" sx={{ fontWeight: 900, py: 3 }}>Enter a Quantity to Check Price</Typography>
       <Box sx={{ width: '100%', boxShadow: "0px 3px 4px #EDEDED", borderRadius: '6px', overflow: "hidden", py: 2, px: 4 }}>
-
-        {/* Box Header  */}
-
         <Box sx={{ display: 'flex' }}>
 
           <input type="number" placeholder='Enter Quantity' className='QuantityInput' value={islocalquantity} onChange={(e) => setIslocalQuantity(parseInt(e.target.value))} style={{ fontSize: '12px' }} />
 
           {
             row.qnty === 0 || islocalquantity > row.qnty || row.price === 0 ?
-              <Link to={`/requestquote/${id}@${islocalquantity}`} style={{ color: "#fff", width: "100%" }}>
+              <Button variant='contained' sx={{
 
-                <Button variant='contained' sx={{
+                width: "100%", weight: '40px', ml: 4, backgroundColor: '#EF3E36', px: 4, fontSize: { xs: "8px", md: "12px" },
 
-                  width: "100%", weight: '40px', ml: 4, backgroundColor: '#EF3E36', px: 4, fontSize: { xs: "8px", md: "12px" },
+                "&:hover": {
 
-                  "&:hover": {
-
-                    backgroundColor: '#EF3E36'
-
-                  }
-
-                }}> Request Quote
-                </Button>
-
-              </Link>
+                  backgroundColor: '#EF3E36'
+                }
+              }} onClick={() => {
+                if (sessionStorage.getItem('user')) {
+                  navigate(`/requestquote/${id}@${islocalquantity}`)
+                } else {
+                  navigate("/register")
+                }
+              }} > Request Quote
+              </Button>
               :
               <Button variant='contained' sx={{
 

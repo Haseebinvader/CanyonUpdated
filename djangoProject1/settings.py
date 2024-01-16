@@ -23,6 +23,8 @@ SECRET_KEY = 'django-insecure-#!f2o+w$f$7h_1_vmw67_i-&q#+t#l3m%^3x!(c!&0s&*^ujq2
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+AUTH_USER_MODEL = 'authentication.Customer'
+
 
 ALLOWED_HOSTS = ["127.0.0.1"]
 
@@ -46,7 +48,8 @@ INSTALLED_APPS = [
     'api',
     'corsheaders',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'authentication'
 
 ]
 
@@ -55,12 +58,10 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 10,
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 11000  # Adjust the value based on your requirements
+# Adjust the value based on your requirements
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 11000
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,7 +69,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -81,8 +82,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'frontend/build']
-        ,
+        'DIRS': [BASE_DIR / 'frontend/build'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

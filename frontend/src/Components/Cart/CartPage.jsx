@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useTheme } from '@emotion/react';
 import {
   Typography,
@@ -12,111 +12,102 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CartBtn from '../Reuse/CartBtn';
 import { UserContext } from '../../UserContext/UserContext';
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import CartTable from './CartTable';
 
-const localStorageItemCart = JSON.parse(localStorage.getItem('itemCart')) || [];
+// const itemsInLocalStorage = JSON.parse(localStorage.getItem('itemCart')) || [];
+
+
+const fetchItemDetails = async (item) => {
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/api/products/?ItemNo=${item.ItemNo}`);
+    const data = await response.data.results;
+    return data; // Adjust this based on your API response structure
+  } catch (error) {
+    console.error('Error fetching item details:', error);
+    return null;
+  }
+};
+
 
 const AddToCart = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [quantity, setQuantity] = React.useState(0)
-  const { row } = useContext(UserContext)
+  const { itemsInLocalStorage, setItemsInLocalStorage, accessToken } = useContext(UserContext)
+  const [itemDetails, setItemDetails] = useState([]);
+
+
+
+  const handleQuantityChange = ((e, i) => {
+    const updatedItems = itemsInLocalStorage.map(item => {
+      if (item.ItemNo === i.ItemNo) {
+        return { ...item, qnty: e.target.value };
+      }
+      return item;
+    });
+
+    localStorage.setItem('itemCart', JSON.stringify(updatedItems));
+    setItemsInLocalStorage(updatedItems);
+  });
+  useEffect(() => {
+    const updateLocalStorage = () => {
+      localStorage.setItem('itemCart', JSON.stringify(itemsInLocalStorage));
+    };
+
+    updateLocalStorage();
+  }, [itemsInLocalStorage, handleQuantityChange]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const details = await Promise.all(
+        itemsInLocalStorage.map(async (item) => {
+          const apiData = await fetchItemDetails(item);
+          return { ...item, apiData };
+        })
+      );
+      setItemDetails(details);
+    };
+
+    fetchData();
+  }, [itemsInLocalStorage]);
+
+  const handleCheckOut =
+    (e) => {
+      e.preventDefault();
+      if (sessionStorage.getItem('user')) {
+        navigate("/checkOut");
+      } else {
+        navigate("/register")
+      }
+    }
+
 
   useEffect(() => {
     // Calculate the total when the component mounts
-    const newTotal = localStorageItemCart.reduce((acc, item) => {
+    const newTotal = itemsInLocalStorage.reduce((acc, item) => {
       return acc + item.unitCost[0] * item.qnty;
     }, 0);
     setTotal(newTotal);
-  }, []); // Empty dependency array means this effect runs once on component mount
-
-  const increaseQuantityInLocalStorage = (itemNo) => {
-    window.location.reload();
-    const storedObjectString = localStorage.getItem('itemCart');
-    // Check if the object exists in localStorage
-    if (storedObjectString) {
-      try {
-        // Parse the JSON string into an object
-        const storedObject = JSON.parse(storedObjectString);
-
-
-
-        // Find the item in the object based on the itemNo
-        const itemToUpdate = storedObject.find(item => item.ItemNo === itemNo);
-
-
-
-        if (itemToUpdate) {
-          // Update the quantity of the item
-          itemToUpdate.qnty += 1;
-
-
-
-          // Save the updated object back to localStorage
-          localStorage.setItem('itemCart', JSON.stringify(storedObject));
-          console.log('Quantity updated successfully.');
-        } else {
-          console.log('Item not found in the object.');
-        }
-      } catch (error) {
-        console.error('Error parsing or updating the object:', error);
-      }
-    } else {
-      console.log('No object found in localStorage.');
-    }
-  };
-
-  const decreaseQuantityInLocalStorage = (itemNo) => {
-    window.location.reload();
-    const storedObjectString = localStorage.getItem('itemCart');
-    // Check if the object exists in localStorage
-    if (storedObjectString) {
-      try {
-        // Parse the JSON string into an object
-        const storedObject = JSON.parse(storedObjectString);
-
-
-
-        // Find the item in the object based on the itemNo
-        const itemToUpdate = storedObject.find(item => item.ItemNo === itemNo);
-
-
-
-        if (itemToUpdate) {
-          // Update the quantity of the item
-          itemToUpdate.qnty = itemToUpdate.qnty - 1;
-
-
-
-          // Save the updated object back to localStorage
-          localStorage.setItem('itemCart', JSON.stringify(storedObject));
-          console.log('Quantity updated successfully.');
-        } else {
-          console.log('Item not found in the object.');
-        }
-      } catch (error) {
-        console.error('Error parsing or updating the object:', error);
-      }
-    } else {
-      console.log('No object found in localStorage.');
-    }
-  };
+  }, [total, setTotal, itemsInLocalStorage]); // Empty dependency array means this effect runs once on component mount
 
   const handleClickOpen = () => setOpen(true);
 
   const removeFromCart = (itemIndex) => {
     setOpen(false);
-    const updatedCart = [...localStorageItemCart];
+    const updatedCart = [...itemsInLocalStorage];
     updatedCart.splice(itemIndex, 1);
     localStorage.setItem('itemCart', JSON.stringify(updatedCart));
     window.location.reload();
   };
+
 
   return (
     <section style={{ minHeight: '70vh' }}>
@@ -135,7 +126,9 @@ const AddToCart = () => {
             <table cellSpacing="0" style={{ width: '100%', borderRadius: "12px", overflow: 'hidden' }}>
               <thead>
                 <tr style={{ backgroundColor: '#F1F1F1' }}>
-                  <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', width: '50%', fontsize: "14px" }}>Product</th>
+                  <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', width: '25%', fontsize: "14px" }}>Part Number</th>
+                  <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', width: '30%', fontsize: "14px" }}>Material Desc</th>
+                  <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', width: '50%', fontsize: "14px" }}>Geometry Desc</th>
                   <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', fontsize: "14px" }}>Quantity</th>
                   <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', fontsize: "14px" }}>Unit Cost</th>
                   <th style={{ padding: '10px 0', borderLeft: '1px solid #fff', fontsize: "14px" }}>Sub Total</th>
@@ -143,42 +136,8 @@ const AddToCart = () => {
                 </tr>
               </thead>
               <tbody>
-                {localStorageItemCart?.map((i, index) => (
-                  <tr key={index} style={{ borderTop: '1px solid #000' }}>
-                    <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>
-                      {/* <img src="" alt="" /> */}
-                      <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                        <Box sx={{ width: "40%", display: 'flex', justifyContent: "center", alignItems: "center", flexDirection: "column" }}>img</Box>
-                        <Box sx={{ width: "60%", display: 'flex', justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                          <Typography variant='body2' sx={{ color: "#F4976C" }}>{i.desc}</Typography>
-                        </Box>
-                      </Box>
-                    </td>
-                    <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1', }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: "center" }}>
-                        <CartBtn text={"-"} onClick={() => {
-                          if (i.qnty !== 0) {
-                            decreaseQuantityInLocalStorage(i.ItemNo)
-
-                          }
-                        }} /> {i.qnty} <CartBtn text={"+"} onClick={() => {
-                          console.log("clicked");
-                          if (i.qnty < i.totalQnty) {
-                            increaseQuantityInLocalStorage(i.ItemNo)
-                          }
-                        }} />
-                      </Box>
-                    </td>
-                    <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>
-                      ${i.unitCost[0]}
-                    </td>
-                    <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1', fontWeight: 900 }}>
-                      ${i.unitCost[0] * i.qnty}
-                    </td>
-                    <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1', fontWeight: 900, cursor: 'pointer' }}>
-                      <DeleteIcon onClick={() => removeFromCart(index)} />
-                    </td>
-                  </tr>
+                {itemDetails?.map((i, index) => (
+                  <CartTable i={i} index={index} removeFromCart={removeFromCart} handleQuantityChange={handleQuantityChange} />
                 ))}
               </tbody>
             </table>
@@ -209,23 +168,14 @@ const AddToCart = () => {
                 <Typography variant="body1" color="initial" >Total</Typography>
                 <Typography variant="body1" color="initial" sx={{ fontWeight: 900 }}>${total}</Typography>
               </Box>
-              <Link to="/CheckOut">
-                <Button variant='contained' sx={{
-                  width: "100%", fontSize: "12px", height: '32px', backgroundColor: '#F4976C', mt: 2,
-                  '&:hover': { backgroundColor: '#F4976C', },
-                }}> Proceed to checkout</Button>
-              </Link>
-              <Box sx={{ backgroundColor: '#ffeeba', my: 2, borderRadius: '10px', p: 1 }}>
-                <Typography variant="body2" color="initial">
-                  we currently only ship web orders to the United
-                  States.please submit RFQ if you need international
-                  shipping
-                </Typography>
-              </Box>
               <Button variant='contained' sx={{
                 width: "100%", fontSize: "12px", height: '32px', backgroundColor: '#F4976C', mt: 2,
                 '&:hover': { backgroundColor: '#F4976C', },
-              }}> Back to Ship</Button>
+              }} onClick={handleCheckOut} > Proceed to checkout</Button>
+              <Button variant='contained' sx={{
+                width: "100%", fontSize: "12px", height: '32px', backgroundColor: '#F4976C', mt: 2,
+                '&:hover': { backgroundColor: '#F4976C', },
+              }} onClick={() => navigate('/')} > Back to Main Page</Button>
             </Box>
           </Grid>
         </Grid>
@@ -254,7 +204,7 @@ const AddToCart = () => {
         </Dialog>
       </div>
 
-    </section>
+    </section >
   )
 }
 

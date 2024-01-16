@@ -4,10 +4,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Home, DetailPage, AddToCart, RequestQuote, CheckOut } from './Pages'
 import { UserContext } from './UserContext/UserContext'
 import axios from 'axios'
-import { Login } from '@mui/icons-material'
+import Login from './Pages/Authentication/Login'
+import Register from './Pages/Authentication/Register'
+import OtpVerification from './Pages/Authentication/OtpVerification'
 
 function App() {
   const [pageSize, setPageSize] = useState(25)
+  const [orderno, setorderno] = useState(0)
   const [url, setUrl] = useState(`http://127.0.0.1:8000/api/products/?Block=False&Online=Online&limit=${pageSize}&ordering=-qnty`)
   const [data, setData] = useState([])
   const [sizeToggle, setSizeToggle] = useState(true)
@@ -17,7 +20,6 @@ function App() {
   const [previousPage, setPreviousPage] = useState('')
   const [accessToken, setAccessToken] = useState('')
   const [clearFiler, setClearFilter] = useState(false)
-  
   const [itemLineCount, setItemLineCount] = useState(0);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [selectedcompliance, setSelectedcompliance] = useState([]);
@@ -47,6 +49,16 @@ function App() {
   const [selectedSize, setSelectedSize] = useState([]); // Array to store selected Size values
   const [selectedCS, setSelectedCS] = useState([]);     // Array to store selected CS values
   const [selectedID, setSelectedID] = useState([]);     // Array to store selected ID values
+  const [cardDetails, setCardDetails] = useState({
+    "methodType": "",
+    "methodName": "",
+    "accountHolderName": "",
+    "avsStreet": "",
+    "avsZip": "",
+    "cardCode": "",
+    "cardExpiration": "",
+    "cardNumber": ""
+  })
 
 
   useEffect(() => {
@@ -89,6 +101,7 @@ function App() {
       setAccessToken(res.data.access_token)
     })
   }, [url, pageSize, setAccessToken, setData]);
+  const [itemsInLocalStorage, setItemsInLocalStorage] = useState(JSON.parse(localStorage.getItem('itemCart')) || [])
   return (
     <div className="App">
       <UserContext.Provider value={{
@@ -114,7 +127,8 @@ function App() {
         setselectedUSASize,
         setselectedUSACS,
         setselectedUSAID,
-        itemLineCount, setItemLineCount
+        itemLineCount, setItemLineCount, orderno, setorderno, itemsInLocalStorage, setItemsInLocalStorage,
+        cardDetails, setCardDetails
       }} >
         <Router>
           <Routes>
@@ -122,8 +136,10 @@ function App() {
             <Route path="/detail/:id" element={<DetailPage />} />
             <Route path="/addtocart" element={<AddToCart />} />
             <Route path="/requestquote/:id" element={<RequestQuote />} />
-            <Route path="/CheckOut" element={<CheckOut />} />
-            <Route path="/login" element={<Login/> } />
+            <Route path="/checkOut" element={<CheckOut />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/otpVerification" element={<OtpVerification />} />
           </Routes>
         </Router>
       </UserContext.Provider>

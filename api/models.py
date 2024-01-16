@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 class Product(models.Model):
@@ -11,7 +12,8 @@ class Product(models.Model):
 
     Description2 = models.CharField(max_length=2000, blank=True, null=True)
 
-    SearchDescription = models.CharField(max_length=2000, blank=True, null=True)
+    SearchDescription = models.CharField(
+        max_length=2000, blank=True, null=True)
 
     LotSize = models.IntegerField(blank=True, null=True)
 
@@ -29,7 +31,7 @@ class Product(models.Model):
 
     Color = models.CharField(max_length=500, blank=True, null=True)
 
-    LowTemperature = models.IntegerField( blank=True, null=True)
+    LowTemperature = models.IntegerField(blank=True, null=True)
 
     HighTemperature = models.FloatField(blank=True, null=True)
 
@@ -47,7 +49,8 @@ class Product(models.Model):
 
     MaterialNotes = models.TextField(blank=True, null=True)
 
-    CleanRoomManufactured = models.CharField(max_length=500, blank=True, null=True)
+    CleanRoomManufactured = models.CharField(
+        max_length=500, blank=True, null=True)
 
     FDAType = models.CharField(max_length=500, blank=True, null=True)
 
@@ -73,34 +76,40 @@ class Product(models.Model):
 
     NSF51 = models.CharField(max_length=500, blank=True, null=True)
 
-    AntiExplosiveDecompression = models.CharField(max_length=500, blank=True, null=True)
+    AntiExplosiveDecompression = models.CharField(
+        max_length=500, blank=True, null=True)
 
     NACETM0297 = models.CharField(max_length=500, blank=True, null=True)
 
     NORSOKM710 = models.CharField(max_length=500, blank=True, null=True)
 
-    UltraLowTemperature = models.CharField(max_length=500, blank=True, null=True)
+    UltraLowTemperature = models.CharField(
+        max_length=500, blank=True, null=True)
 
-    UltraHighTemperature = models.CharField(max_length=500, blank=True, null=True)
+    UltraHighTemperature = models.CharField(
+        max_length=500, blank=True, null=True)
 
     SteamResistant = models.CharField(max_length=500, blank=True, null=True)
 
-    UltraSteamResistant = models.CharField(max_length=500, blank=True, null=True)
+    UltraSteamResistant = models.CharField(
+        max_length=500, blank=True, null=True)
 
-    InternallyLubricated = models.CharField(max_length=500, blank=True, null=True)
+    InternallyLubricated = models.CharField(
+        max_length=500, blank=True, null=True)
 
-    ExternallyLubricated = models.CharField(max_length=500, blank=True, null=True)
+    ExternallyLubricated = models.CharField(
+        max_length=500, blank=True, null=True)
 
     ConductiveFiller = models.CharField(max_length=500, blank=True, null=True)
 
     LowCompressionSet = models.CharField(max_length=500, blank=True, null=True)
 
-    CrossSectionalGeometry = models.CharField(max_length=500, blank=True, null=True)
+    CrossSectionalGeometry = models.CharField(
+        max_length=500, blank=True, null=True)
 
-    CrossSectionalDiameter = models.CharField(max_length=500, blank=True, null=True)
+    CrossSectionalDiameter = models.FloatField(blank=True, null=True)
 
-    InsideDiameter = models.CharField(max_length=500, blank=True, null=True)
-
+    InsideDiameter = models.FloatField(blank=True, null=True)
     SizeAS568 = models.CharField(max_length=500, blank=True, null=True)
 
     SizeJIS = models.CharField(max_length=500, blank=True, null=True)
@@ -117,3 +126,8 @@ class Product(models.Model):
 
     def __str__(self):
         return self.ItemNo
+
+
+class LastTimeUpdation(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    timeStamp = models.DateTimeField()
