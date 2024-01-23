@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.hashers import make_password
 from django.utils.text import slugify
 
+
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -67,4 +68,20 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
         super(Customer, self).save(*args, **kwargs)
 
-# class NumberSeries(models.Model):
+
+class NumberSeries(models.Model):
+    number = models.CharField(max_length=100, unique=True)
+    active = models.BooleanField()
+
+
+class NumberSeriesSetup(models.Model):
+    number_series = models.CharField(max_length=20)
+    upto = models.PositiveBigIntegerField()
+
+    def save(self, *args, **kwargs):
+        for i in range(1, self.upto + 1):
+            NumberSeries.objects.create(
+                number=f"{self.number_series}-{i}",
+                status=False
+            ).save()
+        super(NumberSeriesSetup, self).save(*args, **kwargs)

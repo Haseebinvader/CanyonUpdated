@@ -29,7 +29,7 @@ class GetAccessTokenView(View):
 
             'client_id': '68147cfe-d472-4788-a9ac-7aa804249a96',
 
-            'client_secret': '9jF8Q~jTUMdP6CtxNwP6zis7nS1x_acCXdJf-bW4',
+            'client_secret': 'EAo8Q~uLvWsIqJDkugdaolvhImCmQiEd4~yR-bjs',
 
             'scope': 'https://api.businesscentral.dynamics.com/.default'
 
@@ -171,6 +171,7 @@ class DataFetchView(View):
                     if item['AttributeName']:
                         attribute_key = item['AttributeName'].replace(
                             ' ', '').replace(r'\W', '')
+                        print(attribute_key)
 
                         current_product[attribute_key] = item['AttributeValue']
 
@@ -202,149 +203,68 @@ class DataFetchView(View):
                             submaterial_list.append(value)
 
                 for product_data in product_list:
-                    p = Product.objects.filter(
-                        ItemNo=product_data.get('ItemNo')).first()
-
-                    if not p:
-                        pr = Product(
-
-                            ItemNo=product_data.get('ItemNo'),
-
-                            qnty=product_data.get('qnty'),
-
-                            price=product_data.get('price'),
-
-                            Description=product_data.get('Description'),
-
-                            Description2=product_data.get('Description2'),
-
-                            SearchDescription=product_data.get(
-                                'SearchDescription'),
-
-                            LotSize=product_data.get('LotSize'),
-
-                            Blocked=product_data.get('Blocked'),
-
-                            CompoundNumber=product_data.get('CompoundNumber'),
-
-                            Material=product_data.get('Material'),
-
-                            Durometer=product_data.get('Durometer'),
-
-                            DurometerScale=product_data.get('DurometerScale'),
-
-                            DurometerRange=product_data.get('DurometerRange'),
-
-                            Color=product_data.get('Color'),
-
-                            LowTemperature=product_data.get(
-                                'LowTemperature(°C)'),
-
-                            HighTemperature=product_data.get(
-                                'HighTemperature(°C)'),
-
-                            FDACompliant=product_data.get('FDACompliant'),
-
-                            MaterialSubtype=product_data.get(
-                                'MaterialSubtype'),
-
-                            CureType=product_data.get('CureType'),
-
-                            Encapsulated=product_data.get('Encapsulated'),
-
-                            Brand=product_data.get('Brand'),
-
-                            SalesNotes=product_data.get('SalesNotes'),
-
-                            MaterialNotes=product_data.get('MaterialNotes'),
-
-                            CleanRoomManufactured=product_data.get(
-                                'CleanRoomManufactured'),
-
-                            FDAType=product_data.get('FDAType'),
-
-                            USPClassVI=product_data.get('USPClassVI'),
-
-                            USPClassVI87=product_data.get('USPClassVI87'),
-
-                            USPClassVI88=product_data.get('USPClassVI88'),
-
-                            A3Sanitary=product_data.get('3ASanitary'),
-
-                            KTW=product_data.get('KTW'),
-
-                            WRAS=product_data.get('WRAS'),
-
-                            ULListed=product_data.get('ULListed'),
-
-                            ULRating=product_data.get('ULRating'),
-
-                            MetalDetectable=product_data.get(
-                                'MetalDetectable'),
-
-                            NSF61=product_data.get('NSF61'),
-
-                            NSF51=product_data.get('NSF51'),
-
-                            AntiExplosiveDecompression=product_data.get(
-                                'Anti-Explosive Decompression (AED)'),
-
-                            NACETM0297=product_data.get('NACETM0297'),
-
-                            NORSOKM710=product_data.get('NORSOKM710'),
-
-                            UltraLowTemperature=product_data.get(
-                                'UltraLowTemperature'),
-
-                            UltraHighTemperature=product_data.get(
-                                'UltraHighTemperature'),
-
-                            SteamResistant=product_data.get('SteamResistant'),
-
-                            UltraSteamResistant=product_data.get(
-                                'UltraSteamResistant'),
-
-                            InternallyLubricated=product_data.get(
-                                'InternallyLubricated'),
-
-                            ExternallyLubricated=product_data.get(
-                                'ExternallyLubricated'),
-
-                            ConductiveFiller=product_data.get(
-                                'ConductiveFiller'),
-
-                            LowCompressionSet=product_data.get(
-                                'LowCompressionSet'),
-
-                            CrossSectionalGeometry=product_data.get(
-                                'CrossSectionalGeometry'),
-
-                            CrossSectionalDiameter=product_data.get(
-                                'CrossSectionalDiameter(CS)'),
-
-                            InsideDiameter=product_data.get(
-                                'InsideDiameter(ID)'),
-
-                            SizeAS568=product_data.get('Size(AS568)'),
-
-                            SizeJIS=product_data.get('Size(JIS)'),
-
-                            SizeMetric=product_data.get('SizeMetric'),
-
-                            SizeStandard=product_data.get('SizeStandard'),
-
-                            Online=product_data.get('Online'),
-
-                            picture1=product_data.get('picture1'),
-
-                            picture2=product_data.get('picture2'),
-
-                        )
-
-                        pr.save()
-
+                    product, product_data = Product.objects.update_or_create(
+                        ItemNo=product_data.get('ItemNo'),
+                        defaults={
+                            'qnty': product_data.get('qnty'),
+                            'price': product_data.get('price'),
+                            'Description': product_data.get('Description'),
+                            'Description2': product_data.get('Description2'),
+                            'SearchDescription': product_data.get('SearchDescription'),
+                            'LotSize': product_data.get('LotSize'),
+                            'Blocked': product_data.get('Blocked'),
+                            'CompoundNumber': product_data.get('CompoundNumber'),
+                            'Material': product_data.get('Material'),
+                            'Durometer': product_data.get('Durometer'),
+                            'DurometerScale': product_data.get('DurometerScale'),
+                            'DurometerRange': product_data.get('DurometerRange'),
+                            'Color': product_data.get('Color'),
+                            'LowTemperature': product_data.get('LowTemperature(°C)'),
+                            'HighTemperature': product_data.get('HighTemperature(°C)'),
+                            'FDACompliant': product_data.get('FDACompliant'),
+                            'MaterialSubtype': product_data.get('MaterialSubtype'),
+                            'CureType': product_data.get('CureType'),
+                            'Encapsulated': product_data.get('Encapsulated'),
+                            'Brand': product_data.get('Brand'),
+                            'SalesNotes': product_data.get('SalesNotes'),
+                            'MaterialNotes': product_data.get('MaterialNotes'),
+                            'CleanRoomManufactured': product_data.get('CleanRoomManufactured'),
+                            'FDAType': product_data.get('FDAType'),
+                            'USPClassVI': product_data.get('USPClassVI'),
+                            'USPClassVI87': product_data.get('USPClassVI87'),
+                            'USPClassVI88': product_data.get('USPClassVI88'),
+                            'A3Sanitary': product_data.get('3ASanitary'),
+                            'KTW': product_data.get('KTW'),
+                            'WRAS': product_data.get('WRAS'),
+                            'ULListed': product_data.get('ULListed'),
+                            'ULRating': product_data.get('ULRating'),
+                            'MetalDetectable': product_data.get('MetalDetectable'),
+                            'NSF61': product_data.get('NSF61'),
+                            'NSF51': product_data.get('NSF51'),
+                            'AntiExplosiveDecompression': product_data.get("Anti-ExplosiveDecompression(AED)"),
+                            'NACETM0297': product_data.get('NACETM0297'),
+                            'NORSOKM710': product_data.get('NORSOKM710'),
+                            'UltraLowTemperature': product_data.get('UltraLowTemperature'),
+                            'UltraHighTemperature': product_data.get('UltraHighTemperature'),
+                            'SteamResistant': product_data.get('SteamResistant'),
+                            'UltraSteamResistant': product_data.get('UltraSteamResistant'),
+                            'InternallyLubricated': product_data.get('InternallyLubricated'),
+                            'ExternallyLubricated': product_data.get('ExternallyLubricated'),
+                            'ConductiveFiller': product_data.get('ConductiveFiller'),
+                            'LowCompressionSet': product_data.get('LowCompressionSet'),
+                            'CrossSectionalGeometry': product_data.get('CrossSectionalGeometry'),
+                            'CrossSectionalDiameter': product_data.get('CrossSectionalDiameter(CS)'),
+                            'InsideDiameter': product_data.get('InsideDiameter(ID)'),
+                            'SizeAS568': product_data.get('Size(AS568)'),
+                            'SizeJIS': product_data.get('Size(JIS)'),
+                            'SizeMetric': product_data.get('SizeMetric'),
+                            'SizeStandard': product_data.get('SizeStandard'),
+                            'Online': product_data.get('Online'),
+                            'picture1': product_data.get('picture1'),
+                            'picture2': product_data.get('picture2'),
+                        }
+                    )
                 if "@odata.nextLink" in data:
-
                     url = data["@odata.nextLink"]
                     print(url)
 
@@ -382,7 +302,7 @@ class DataFetchView(View):
 
             'client_id': '68147cfe-d472-4788-a9ac-7aa804249a96',
 
-            'client_secret': '9jF8Q~jTUMdP6CtxNwP6zis7nS1x_acCXdJf-bW4',
+            'client_secret': 'EAo8Q~uLvWsIqJDkugdaolvhImCmQiEd4~yR-bjs',
 
             'scope': 'https://api.businesscentral.dynamics.com/.default'
 

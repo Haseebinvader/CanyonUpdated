@@ -5,6 +5,8 @@ from .views import *
 
 urlpatterns = [
     path('create/', UserCreateAPIView.as_view(), name='user-create'),
+    path('get_latest_number/', GetLatestNumber.as_view(), name='number-get'),
+    path('create_latest_number/', CreateLatestNumber.as_view(), name='number-create'),
     path('login/', loginApi, name='loginCustomer'),
     path('otpVerification/', otpApi, name='otpVerify'),
     path('user/<customerId>/', GetUserByCustomerIdView.as_view(),

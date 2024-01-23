@@ -9,16 +9,14 @@ import { UserContext } from "../../UserContext/UserContext";
 const RequestQuote = () => {
   const navigate = useNavigate();
   const { id } = useParams()
-  const [userState, setuserState] = React.useState();
-  const [data, setData] = React.useState([]);
-  const { accessToken } = useContext(UserContext)
+  const [user, setuser] = React.useState();
+  const { accessToken, requestAdata, setRequestAdata } = useContext(UserContext)
   React.useEffect(() => {
     const user = sessionStorage.getItem("user");
     axios.get(`http://127.0.0.1:8000/authentication/user/${user}/`).then((res) => {
-      setuserState(res.data);
-      console.log(res.data);
+      setuser(res.data);
     })
-  }, [userState]);
+  }, [user]);
 
   const handleCancel = () => {
     navigate(-1);
@@ -26,26 +24,16 @@ const RequestQuote = () => {
 
   React.useEffect(() => {
     const item = id?.split('@')[0]
-    console.log("item" + item);
     axios.get(
-      `https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/ODataV4/Company('My%20Company')/itemapi`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          $filter: `ItemNo eq '${item}'`,
-        },
-      }
+      `http://127.0.0.1:8000/api/products/?ItemNo=${item}`
     )
       .then((response) => {
-        console.log(response);
-        setData(response.data.value[0]);
+        setRequestAdata(response.data.results[0]);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, [accessToken, data])
+  }, [accessToken, requestAdata])
 
   return (
     <>
@@ -65,7 +53,7 @@ const RequestQuote = () => {
             <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <div className="input_box">
                 <label htmlFor="item">Item No</label>
-                <input className="request_input" value={data?.AXPNo3} />
+                <input className="request_input" value={requestAdata?.SearchDescription} />
               </div>
               <div className="input_box">
                 <label htmlFor="item">Target Price</label>
@@ -73,11 +61,11 @@ const RequestQuote = () => {
               </div>
               <div className="input_box">
                 <label htmlFor="item">Name</label>
-                <input className="request_input" value={userState?.name} />
+                <input className="request_input" defaultValue={user?.name} />
               </div>
               <div className="input_box">
                 <label htmlFor="item">Phone</label>
-                <input className="request_input" value={userState?.phoneNumber} />
+                <input className="request_input" defaultValue={user?.phoneNumber} />
               </div>
             </Grid>
 
@@ -86,7 +74,7 @@ const RequestQuote = () => {
             <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <div className="input_box">
                 <label htmlFor="item">Quantity</label>
-                <input className="request_input" value={id?.split('@')[1]} />
+                <input className="request_input" defaultValue={id?.split('@')[1]} />
               </div>
               <div className="input_box">
                 <label htmlFor="item">Comments </label>
@@ -94,11 +82,11 @@ const RequestQuote = () => {
               </div>
               <div className="input_box">
                 <label htmlFor="item">Address</label>
-                <input className="request_input" value={userState?.addressLine1 + " " + userState?.addressLine2} />
+                <input className="request_input" defaultValue={user?.addressLine1 + " " + user?.addressLine2} />
               </div>
               <div className="input_box">
                 <label htmlFor="item">Email</label>
-                <input className="request_input" value={userState?.email} />
+                <input className="request_input" defaultValue={user?.email} />
               </div>
             </Grid>
           </Grid>

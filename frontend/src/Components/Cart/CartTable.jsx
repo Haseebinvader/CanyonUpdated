@@ -34,6 +34,7 @@ function CartTable({ i, index, removeFromCart, handleQuantityChange }) {
                 }
             ).then((res) => {
                 setPrice(res.data.value[res.data.value.length - 1].UnitPrice);
+                console.log(res);
             });
         } catch (error) {
             throw error;
@@ -62,14 +63,15 @@ function CartTable({ i, index, removeFromCart, handleQuantityChange }) {
                 </Box>
             </td>
             <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1', }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: "center" }}><input type="number" style={{ width: "50px", paddingLeft: "20px" }} value={i.qnty} onChange={(e) => handleQuantityChange(e, i)} />
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: "center" }}>
+                    <input type="number" min={1} style={{ height: "50px", width: "60px", paddingLeft: "20px" }} value={i.qnty} onChange={(e) => handleQuantityChange(e, i)} />
                 </Box>
             </td>
             <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>
                 ${price}
             </td>
             <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1', fontWeight: 900 }}>
-                ${(i.unitCost[0] * i.qnty).toFixed(2)}
+                ${(price * i.qnty).toFixed(2)}
             </td>
             <td style={{ padding: '25px 0', textAlign: 'center', border: '1px solid #F1F1F1', fontWeight: 900, cursor: 'pointer' }}>
                 <DeleteIcon onClick={() => removeFromCart(index)} />

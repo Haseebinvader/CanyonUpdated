@@ -28,7 +28,20 @@ const TopDetails = ({ color, AvailableQuantity, shipTime }) => {
                     <br />
                     <br />
                     {row.MaterialNotes ? `${row.CompoundNumber && `${row.CompoundNumber} is manufactured with the following features and specifications: ${row.MaterialNotes}`}` : ''}
-                    {row.FDACompliant || row.NSF51 || row.NSF61 || row.USPClassVI || row.KTW || row.WRAS || row.A3Sanitary ? `${row.CompoundNumber && `${row.CompoundNumber} is manufactured with the following features and specifications: ${row.FDACompliant ? row.FDACompliant + "," : ''} ${row.NSF51 ? row.NSF51 + "," : ''} ${row.NSF61 ? row.NSF61 + "," : ''} ${row.USPClassVI ? row.USPClassVI + "," : ''} ${row.KTW ? row.KTW + "," : ''} ${row.WRAS ? row.WRAS + "," : ''} ${row.A3Sanitary ? row.A3Sanitary + "." : ''}`}` : ''}
+                    {row.FDACompliant || row.NSF51 || row.NSF61 || row.CleanRoomManufactured || row.InternallyLubricated || row.USPClassVI || row.NORSOKM710 ||
+                        row.SteamResistant ||
+                        row.UltraSteamResistant ||
+                        row.LowCompressionSet || row.KTW || row.WRAS || row.A3Sanitary || row.ExternallyLubricated || row.MetalDetectable || row.ConductiveFiller || row.AntiExplosiveDecompression ? `${row.CompoundNumber && `${row.CompoundNumber} is manufactured with the following features and specifications: ${row.FDACompliant ? row.FDACompliant + "," : ''} ${row.NSF51 ? row.NSF51 + "," : ''} ${row.NSF61 ? row.NSF61 + "," : ''} ${row.USPClassVI ? row.USPClassVI + "," : ''} ${row.KTW ? row.KTW + "," : ''} ${row.AntiExplosiveDecompression ? row.AntiExplosiveDecompression + "," : ''} ${row.WRAS ? row.WRAS + "," : ''} ${row.NACETM0297 ? row.NACETM0297 + ',' : ''}
+                ${row.NORSOKM710 ? row.NORSOKM710 + ',' : ''}
+                ${row.SteamResistant ? row.SteamResistant + ',' : ''}
+                ${row.UltraSteamResistant ? row.UltraSteamResistant + ',' : ''}
+                ${row.LowCompressionSet ? row.LowCompressionSet + ',' : ''}
+                ${row.MetalDetectable ? row.MetalDetectable + ',' : ''}
+                ${row.CleanRoomManufactured ? row.CleanRoomManufactured + ',' : ''}
+                ${row.InternallyLubricated ? row.InternallyLubricated + ',' : ''}
+                ${row.ExternallyLubricated ? row.ExternallyLubricated + ',' : ''}
+                ${row.ConductiveFiller ? row.ConductiveFiller + ',' : ''}
+                 ${row.A3Sanitary ? row.A3Sanitary + "." : ''}`}` : ''}
                 </Typography>
             </Typography>
 

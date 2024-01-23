@@ -68,10 +68,12 @@ const Register = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    console.log("iiiu", data);
+    await axios.get('http://127.0.0.1:8000/authentication/create_latest_number/')
+    const get_number = await axios.get('http://127.0.0.1:8000/authentication/get_latest_number/')
     const res = await axios.post(
       "https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/api/v2.0/companies(2bd1cda4-091c-ec11-bb76-000d3a22055d)/customers",
       {
+        "number": get_number?.data?.number,
         "displayName": data?.name,
         "addressLine1": data?.addressLine1,
         "addressLine2": data?.addressLine2,
@@ -93,7 +95,7 @@ const Register = () => {
         axios.post(
           "http://127.0.0.1:8000/authentication/create/",
           {
-            "customer_id": res.data.number,
+            "customer_id": get_number?.data?.number,
             "first_name": data?.first_name,
             "last_name": data?.last_name,
             "name": data?.name,
@@ -109,7 +111,6 @@ const Register = () => {
           }
         )
           .then((res) => {
-            console.log(res.status, res.data);
             navigate("/login")
           })
           .catch((error) => {

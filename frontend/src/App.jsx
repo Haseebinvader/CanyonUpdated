@@ -45,7 +45,7 @@ function App() {
   const [selectedUSASize, setselectedUSASize] = useState([])
   const [selectedUSACS, setselectedUSACS] = useState([])
   const [selectedUSAID, setselectedUSAID] = useState([])
-
+  const [requestAdata, setRequestAdata] = useState([]);
   const [selectedSize, setSelectedSize] = useState([]); // Array to store selected Size values
   const [selectedCS, setSelectedCS] = useState([]);     // Array to store selected CS values
   const [selectedID, setSelectedID] = useState([]);     // Array to store selected ID values
@@ -100,7 +100,7 @@ function App() {
     axios.get('http://127.0.0.1:8000/api/get_access_token/').then((res) => {
       setAccessToken(res.data.access_token)
     })
-  }, [url, pageSize, setAccessToken, setData]);
+  }, [url, pageSize, setAccessToken, setData, requestAdata]);
   const [itemsInLocalStorage, setItemsInLocalStorage] = useState(JSON.parse(localStorage.getItem('itemCart')) || [])
   return (
     <div className="App">
@@ -128,7 +128,7 @@ function App() {
         setselectedUSACS,
         setselectedUSAID,
         itemLineCount, setItemLineCount, orderno, setorderno, itemsInLocalStorage, setItemsInLocalStorage,
-        cardDetails, setCardDetails
+        cardDetails, setCardDetails, requestAdata, setRequestAdata
       }} >
         <Router>
           <Routes>

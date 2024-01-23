@@ -16,7 +16,7 @@ const payments = [
 ];
 
 export default function Review() {
-    const { itemsInLocalStorage, setItemsInLocalStorage } = useContext(UserContext)
+    const { itemsInLocalStorage, cardDetails } = useContext(UserContext)
     const [count, setCount] = useState(0)
     useEffect(() => {
         {
@@ -49,24 +49,22 @@ export default function Review() {
                     <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                         Shipping
                     </Typography>
-                    <Typography gutterBottom>John Smith</Typography>
-                    <Typography gutterBottom>{addresses.join(", ")}</Typography>
+                    <Typography gutterBottom>{cardDetails?.accountHolderName}</Typography>
+                    <Typography gutterBottom>{cardDetails?.avsStreet + cardDetails?.avsZip}</Typography>
                 </Grid>
                 <Grid item container direction="column" xs={12} sm={6}>
                     <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                         Payment details
                     </Typography>
                     <Grid container>
-                        {payments.map((payment) => (
-                            <React.Fragment key={payment.name}>
-                                <Grid item xs={6}>
-                                    <Typography gutterBottom>{payment.name}</Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography gutterBottom>{payment.detail}</Typography>
-                                </Grid>
-                            </React.Fragment>
-                        ))}
+                        <React.Fragment >
+                            <Grid item xs={6}>
+                                <Typography gutterBottom>{cardDetails?.accountHolderName}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography gutterBottom>{cardDetails?.cardNumber}</Typography>
+                            </Grid>
+                        </React.Fragment>
                     </Grid>
                 </Grid>
             </Grid>

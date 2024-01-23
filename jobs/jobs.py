@@ -18,7 +18,7 @@ def get_access_token():
 
         'client_id': '68147cfe-d472-4788-a9ac-7aa804249a96',
 
-        'client_secret': '9jF8Q~jTUMdP6CtxNwP6zis7nS1x_acCXdJf-bW4',
+        'client_secret': 'EAo8Q~uLvWsIqJDkugdaolvhImCmQiEd4~yR-bjs',
 
         'scope': 'https://api.businesscentral.dynamics.com/.default'
 

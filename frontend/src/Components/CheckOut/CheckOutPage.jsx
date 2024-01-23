@@ -105,11 +105,12 @@ export default function CheckOutPage() {
   };
   const postSalesOrder = () => {
     const user = sessionStorage.getItem("user");
+    console.log(user);
     const itemsInCartArray = JSON.parse(localStorage.getItem("itemCart"));
     const newSalesLines = itemsInCartArray.map((i) => ({
       lineType: "Item",
       lineObjectNumber: i.ItemNo,
-      quantity: i.qnty,
+      quantity: i.qnty ? i.qnty : 0,
       unitPrice: i.unitCost[0],
     }));
     console.log(newSalesLines);
@@ -117,8 +118,8 @@ export default function CheckOutPage() {
       .post(
         "https://api.businesscentral.dynamics.com/v2.0/4e94f06f-db01-47eb-aff3-7a284b01dd84/SandboxNoExtentions/api/v2.0/companies(2bd1cda4-091c-ec11-bb76-000d3a22055d)/salesOrders?$expand=salesOrderLines",
         {
-          customerNumber: user,
-          salesOrderLines: newSalesLines,
+          "customerNumber": user,
+          "salesOrderLines": newSalesLines,
         },
         {
           headers: {
@@ -129,7 +130,7 @@ export default function CheckOutPage() {
       .then((res) => {
         toast.success("order posted successfully")
         setorderno(res.data.number)
-      });
+      }).catch((err) => toast.error("Error in posting Order! Check Your details and try again"));
   };
 
   const [activeStep, setActiveStep] = React.useState(0);

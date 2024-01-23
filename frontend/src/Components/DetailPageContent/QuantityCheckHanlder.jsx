@@ -23,7 +23,7 @@ const QuantityCheckHanlder = () => {
 
   const { row, accessToken, itemCart, setItemCart } = useContext(UserContext)
 
-  const [islocalquantity, setIslocalQuantity] = useState()
+  const [islocalquantity, setIslocalQuantity] = useState(0)
 
   const [isopen, setisopen] = useState(false)
   const [cartAdded, setCartAdded] = useState()
@@ -74,7 +74,7 @@ const QuantityCheckHanlder = () => {
       <Box sx={{ width: '100%', boxShadow: "0px 3px 4px #EDEDED", borderRadius: '6px', overflow: "hidden", py: 2, px: 4 }}>
         <Box sx={{ display: 'flex' }}>
 
-          <input type="number" placeholder='Enter Quantity' className='QuantityInput' value={islocalquantity} onChange={(e) => setIslocalQuantity(parseInt(e.target.value))} style={{ fontSize: '12px' }} />
+          <input type="number" placeholder='Enter Quantity' className='QuantityInput' value={islocalquantity} onChange={(e) => setIslocalQuantity(parseInt(e.target.value))} style={{ fontSize: '12px' }} defaultValue={0} />
 
           {
             row.qnty === 0 || islocalquantity > row.qnty || row.price === 0 ?
@@ -169,7 +169,7 @@ const QuantityCheckHanlder = () => {
 
                     <td style={{ padding: '20px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>{islocalquantity}</td>
 
-                    <td style={{ padding: '20px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>Today or Towmorrow</td>
+                    <td style={{ padding: '20px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>Today or Tomorrow</td>
 
                     <td style={{ padding: '20px 0', textAlign: 'center', border: '1px solid #F1F1F1' }}>$
 

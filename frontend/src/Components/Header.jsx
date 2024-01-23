@@ -5,8 +5,11 @@ import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext/UserContext';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Header = () => {
+
+  const user = sessionStorage.getItem("user");
   const { itemLineCount, setItemLineCount } = useContext(UserContext)
   const navigate = useNavigate()
 
@@ -29,12 +32,14 @@ const Header = () => {
           }} onClick={() => window.location.href = 'https://www.canyoncomponents.com/request-a-quote'}>
             Get a Quote
           </Button>
-          <Button variant='contained' sx={{
-            width: "120px", fontSize: "12px", height: '32px', backgroundColor: '#F4976C',
-            '&:hover': { backgroundColor: '#F4976C' },
-          }} onClick={() => navigate('/login')} >
-            Login
-          </Button>
+          {
+            !user ? <Button variant='contained' sx={{
+              width: "120px", fontSize: "12px", height: '32px', backgroundColor: '#F4976C',
+              '&:hover': { backgroundColor: '#F4976C' },
+            }} onClick={() => navigate('/login')} >
+              Login
+            </Button> : <AccountCircleIcon sx={{ color: "#fff" }} />
+          }
           <Link onClick={() => window.location.load('/addtocart')} to={'/addtocart'} >
             <Badge badgeContent={itemLineCount} color="error" >
               <ShoppingCartIcon sx={{ color: "#fff" }} />

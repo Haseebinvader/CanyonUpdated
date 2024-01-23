@@ -54,3 +54,9 @@ class UserSerializer(serializers.ModelSerializer):
         #   'addressLine2', 'city', 'postalCode', 'phoneNumber']
         fields = "__all__"
         # extra_kwargs = {'password': {'write_only': True}}
+
+
+class NUmberSeriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NumberSeries
+        fields = "__all__"

@@ -8,13 +8,21 @@ import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 
 export default function Address() {
-    const [userState, setuserState] = useState();
+    const [userState, setuserState] = useState({
+        "name": "",
+        "addressLine1": "",
+        "addressLine2": "",
+        "city": "",
+        "email": "",
+        "postalCode": "",
+        "phoneNumber": "",
+    });
     React.useEffect(() => {
         const user = sessionStorage.getItem("user");
         axios.get(`http://127.0.0.1:8000/authentication/user/${user}/`).then((res) => {
             setuserState(res.data);
         })
-    }, [userState]);
+    }, []);
     return (
         <React.Fragment>
             <Typography variant="h6" gutterBottom>
@@ -30,6 +38,7 @@ export default function Address() {
                         autoComplete="given-name"
                         variant="standard"
                         value={userState?.name}
+                        onChange={(e) => setuserState({ ...userState, name: e.target.value })}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -41,6 +50,8 @@ export default function Address() {
                         autoComplete="shipping address-line1"
                         variant="standard"
                         value={userState?.addressLine1}
+                        onChange={(e) => setuserState({ ...userState, addressLine1: e.target.value })}
+
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -51,6 +62,8 @@ export default function Address() {
                         autoComplete="shipping address-line2"
                         variant="standard"
                         value={userState?.addressLine2}
+                        onChange={(e) => setuserState({ ...userState, addressLine2: e.target.value })}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -62,6 +75,8 @@ export default function Address() {
                         autoComplete="shipping address-level2"
                         variant="standard"
                         value={userState?.city}
+                        onChange={(e) => setuserState({ ...userState, city: e.target.value })}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -71,6 +86,8 @@ export default function Address() {
                         fullWidth
                         variant="standard"
                         value={userState?.email}
+                        onChange={(e) => setuserState({ ...userState, email: e.target.value })}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -82,6 +99,8 @@ export default function Address() {
                         autoComplete="shipping postal-code"
                         variant="standard"
                         value={userState?.postalCode}
+                        onChange={(e) => setuserState({ ...userState, postalCode: e.target.value })}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -93,6 +112,8 @@ export default function Address() {
                         autoComplete="shipping country"
                         variant="standard"
                         value={userState?.phoneNumber}
+                        onChange={(e) => setuserState({ ...userState, phoneNumber: e.target.value })}
+
                     />
                 </Grid>
             </Grid>
